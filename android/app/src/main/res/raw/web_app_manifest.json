@@ -1,7 +1,7 @@
 {
   "name": "Briefing",
   "short_name": "Briefing",
-  "theme_color": "#272727",
+  "theme_color": "#b4c72e",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -16,7 +16,7 @@
   ],
   "start_url": "/",
   "display": "fullscreen",
-  "background_color": "#272727",
+  "background_color": "#b4c72e",
   "scope": "/",
   "author": "Dirk Holtwick",
   "description": "Secure anonymous video chat",

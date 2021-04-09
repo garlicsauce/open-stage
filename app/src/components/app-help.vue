@@ -90,7 +90,7 @@
 <style lang="scss">
 .help {
   background: rgba(232, 239, 242, 1);
-  color: #272727;
+  color: #b4c72e;
   display: block;
   font-family: "IBM Plex Serif", Georgia, serif;
   line-height: 1.5rem;
@@ -111,11 +111,11 @@
   }
 
   .text a:hover {
-    color: #00b5ff !important;
+    color: #cbcbcb !important;
   }
 
   .text a:active {
-    color: #99e2ff !important;
+    color: #112242 !important;
   }
 }
 </style>

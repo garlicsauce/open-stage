@@ -24,9 +24,9 @@ def twaManifest = [
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
     name: 'Briefing', // The application name.
     launcherName: 'Briefing', // The name shown on the Android Launcher.
-    themeColor: '#272727', // The color used for the status bar.
+    themeColor: '#b4c72e', // The color used for the status bar.
     navigationColor: '#000000', // The color used for the navigation bar.
-    backgroundColor: '#272727', // The color used for the splash screen background.
+    backgroundColor: '#b4c72e', // The color used for the splash screen background.
     enableNotifications: false, // Set to true to enable notification delegation.
     // Every shortcut must include the following fields:
     // - name: String that will show up in the shortcut.

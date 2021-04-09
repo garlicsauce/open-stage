@@ -30,7 +30,7 @@ function createWindow() {
     minWidth: 800,
     minHeight: 600,
     frame: false,
-    backgroundColor: '#272727',
+    backgroundColor: '#b4c72e',
     title: 'Briefings',
     webPreferences: {
       nodeIntegration: true,

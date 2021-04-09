@@ -42,8 +42,8 @@ let config = {
   },
 
   pwa: {
-    themeColor: "#272727",
-    msTileColor: "#272727",
+    themeColor: "#b4c72e",
+    msTileColor: "#b4c72e",
     appleMobileWebAppCapable: "yes",
     appleMobileWebAppStatusBarStyle: "black",
     workboxPluginMode: "InjectManifest",
