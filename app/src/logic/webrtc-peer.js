@@ -20,7 +20,7 @@ export class WebRTCPeer extends Emitter {
     return SimplePeer.WEBRTC_SUPPORT
   }
 
-  constructor({ remote, local, ...opt } = {}) {
+  constructor({ remote, local, user, ...opt } = {}) {
     super()
 
     this.remote = remote
@@ -29,6 +29,7 @@ export class WebRTCPeer extends Emitter {
     this.room = opt.room || ""
     this.id = "webrtc-peer" + ctr++
     this.fingerprint = ""
+    this.user = user
 
     log("peer", this.id)
     this.setupPeer(opt)

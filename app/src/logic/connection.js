@@ -17,6 +17,7 @@ export async function setupWebRTC(state) {
 
   const webrtc = new WebRTC({
     room: state.room,
+    user: state.user,
     peerSettings: {
       trickle: true,
       sdpTransform: (sdp) => {

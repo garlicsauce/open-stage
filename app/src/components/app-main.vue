@@ -36,6 +36,7 @@
           :id="peer.remote"
           :stream="peer && peer.peer && peer.peer.stream"
           :fingerprint="peer && peer.peer && peer.peer.fingerprint"
+          :name="peer && peer.user && peer.user.name"
         />
 
         <div

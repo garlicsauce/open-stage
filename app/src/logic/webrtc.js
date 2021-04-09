@@ -37,6 +37,7 @@ export class WebRTC extends Emitter {
   constructor({
     wrtc, // wrtc is used for unit testing via node.js
     room = null,
+    user = {},
     peerSettings = {},
   } = {}) {
     super()
@@ -59,7 +60,7 @@ export class WebRTC extends Emitter {
         online: true,
       })
       this.emit("connect")
-      this.io.emit("join", { room })
+      this.io.emit("join", { room, user })
     })
 
     this.io.on("disconnect", () => {
@@ -81,7 +82,7 @@ export class WebRTC extends Emitter {
     })
 
     // Receive all other currently available peers
-    this.io.on("joined", ({ room, peers, vapidPublicKey }) => {
+    this.io.on("joined", ({ room, peers, user, vapidPublicKey }) => {
       const local = this.io.id
 
       state.vapidPublicKey = vapidPublicKey
@@ -148,6 +149,7 @@ export class WebRTC extends Emitter {
     let peer = new WebRTCPeer({
       local,
       remote,
+      user,
       initiator,
       wrtc,
       room: this.room,
@@ -165,6 +167,7 @@ export class WebRTC extends Emitter {
         to: remote,
         signal,
         initiator,
+        user
       })
     })
 

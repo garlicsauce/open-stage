@@ -86,7 +86,7 @@ io.on('connection', function (socket) {
   })
 
   // The peer that joined is responsible for initiating WebRTC connections
-  socket.on('join', ({ room }) => {
+  socket.on('join', ({ room, user }) => {
     let peers = allSocketsForRoom(room)
     const full = peers.length >= config.max
     if (full) {
@@ -102,6 +102,7 @@ io.on('connection', function (socket) {
       socket.emit('joined', {
         room,
         peers,
+        user
       })
     }
   })

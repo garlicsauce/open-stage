@@ -76,6 +76,7 @@
         connected:
         <br />
         <tt>{{ fingerprint }}</tt>
+        <tt>{{ name }}</tt>
       </label>
     </div>
     <div
@@ -155,6 +156,9 @@ export default {
       default: false,
     },
     fingerprint: {
+      type: String,
+    },
+    name: {
       type: String,
     },
     id: {
