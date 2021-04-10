@@ -38,7 +38,7 @@
           :stream="peer && peer.peer && peer.peer.stream"
           :fingerprint="peer && peer.peer && peer.peer.fingerprint"
           :name="peer && peer.peer && peer.peer.user && peer.peer.user.name"
-          :position="peer && peer.peer && peer.peer.user && peer.peer.user.position"  
+          :position="peer && peer.peer && peer.peer.user && peer.peer.user.position"
           :reputation="peer && peer.peer && peer.peer.user && peer.peer.user.reputation"
         />
 
@@ -207,6 +207,26 @@
             </svg>
           </sea-link>
         </div>
+
+        <sea-link
+          @action="doTogglePanel('trade')"
+          :class="{ '-active': mode === 'trade' }"
+          class="tool"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            style="height: 24px;"
+            viewBox="0 0 100 100"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="50" cy="50" r="45" fill="none" stroke-width="7.5"></circle>
+            <line x1="32.5" y1="50" x2="67.5" y2="50" stroke-width="5"></line>
+            <line x1="50" y1="32.5" x2="50" y2="67.5" stroke-width="5"></line>
+          </svg>
+        </sea-link>
+
         <sea-link
           v-if="supportsFullscreen"
           @action="doToggleFullScreen"
@@ -277,13 +297,15 @@
       <app-share></app-share>
     </sea-modal>
 
-    <!--    <sea-modal :active.sync="share" close :title="l.share.title">-->
-    <!--      <app-share></app-share>-->
-    <!--    </sea-modal>-->
+    <sea-modal
+      xclass="panel -left panel-share"
+      :active="mode === 'trade'"
+      :title="l.trade.title"
+      @close="mode = ''"
+    >
+      <app-trade></app-trade>
+    </sea-modal>
 
-    <!--    <sea-modal :active.sync="settings" close :title="l.settings.title" class="text">-->
-    <!--      <app-settings></app-settings>-->
-    <!--    </sea-modal>-->
   </div>
 </template>
 
@@ -306,6 +328,7 @@ export default {
     AppSettings: () =>
       import(/* webpackChunkName: 'settings' */ "./app-settings"),
     AppShare: () => import(/* webpackChunkName: 'share' */ "./app-share"),
+    AppTrade: () => import(/* webpackChunkName: 'trade' */ "./app-trade"),
     SeaLink,
     SeaModal,
     SeaButton,

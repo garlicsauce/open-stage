@@ -13,6 +13,9 @@
     "feedback": "",
     "message": "Invite by sending the link via pressing on the $symbol$ symbol."
   },
+  "trade": {
+    "title": "Add your offer"
+  },
   "settings": {
     "title": "Settings",
     "video": "Video Source",
