@@ -5,7 +5,7 @@
         <td>Investing</td>
         <td>
           <a @click.prevent="doEnterRoom($event)"
-             href="/investing"
+             href="/room/investing"
              class="button start-button"
              id="button">join</a>
         </td>
@@ -14,7 +14,7 @@
         <td>Raiffeisen bank products</td>
         <td>
           <a @click.prevent="doEnterRoom($event)"
-             href="/bank-products"
+             href="/room/bank-products"
              class="button start-button"
              id="button">join</a>
         </td>
@@ -23,7 +23,7 @@
         <td>Room 3</td>
         <td>
           <a @click.prevent="doEnterRoom($event)"
-             href="/room3"
+             href="/room/room3"
              class="button start-button"
              id="button">join</a>
         </td>

@@ -1,6 +1,6 @@
 // --- END GENERATED CODE, START CUSTOM CODE
 
-var ROOM_PATH = "/ng/"
+var ROOM_PATH = "/room/"
 
 workbox.setConfig({ debug: true })
 

@@ -1,6 +1,6 @@
 {
-  "name": "Briefing",
-  "short_name": "Briefing",
+  "name": "Openstage",
+  "short_name": "Openstage",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -28,7 +28,7 @@
       "src": "https://brie.fi/sample.jpg",
       "type": "image/png",
       "size": "1478x1988",
-      "description": "Screenshot Briefing App"
+      "description": "Screenshot Openstage App"
     }
   ],
   "features": [
