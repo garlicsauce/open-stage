@@ -7,6 +7,9 @@
       <label for="itemDesc">Description</label>
       <input class="input" type="text" id="itemDesc" v-model="item.description">
 
+      <label for="itemPhoto">Photo</label>
+      <input class="input" type="file" id="itemPhoto" @change="uploadPhoto($event)">
+
       <label for="itemPrice">Price</label>
       <input class="input" type="number" id="itemPrice" v-model="item.price">
 
@@ -155,7 +158,8 @@
           description: null,
           price: null,
           type: null,
-          duration: null
+          duration: null,
+          photoB64: null
         },
         toggleState: false,
         url: "",
@@ -164,13 +168,23 @@
     methods: {
       createOffer(event) {
         let type = this.toggleValue ? 'auction' : 'sell'
-        this.addOffer(event, this.state.room, this.item.name, type, this.item.description, null, this.item.price, this.item.duration, this.state.user)
+        this.addOffer(event, this.state.room, this.item.name, type, this.item.description, this.item.photoB64, this.item.price, this.item.duration, this.state.user)
       },
       addOffer(event, roomId, title, type, description, photo, price, duration, author) {
         event.preventDefault()
         let info = {roomId, title, type, description, photo, price, duration, author}
         console.log(info)
         messages.emit('addOffer', info)
+      },
+      uploadPhoto(event) {
+        let reader = new FileReader()
+        reader.readAsDataURL(event.target.files[0])
+        reader.onload = () => {
+          this.item.photoB64 = reader.result
+        }
+        reader.onerror = function (error) {
+          console.log("Error during photo encoding: " + error)
+        }
       }
     },
     computed: {
