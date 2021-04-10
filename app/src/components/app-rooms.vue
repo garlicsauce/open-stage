@@ -10,7 +10,7 @@
           <a @click.prevent="doEnterRoom($event, 'investing')"
              href="/room/investing"
              class="button start-button"
-             id="button">join</a>
+             id="investing">join [{{this.numberOfPeople.get('investing') | defaultToZero }}]</a>
         </td>
       </tr>
       <tr>
@@ -19,7 +19,7 @@
           <a @click.prevent="doEnterRoom($event, 'stock')"
              href="/room/stock"
              class="button start-button"
-             id="button">join</a>
+             id="stock">join [{{this.numberOfPeople.get('stock') | defaultToZero }}]</a>
         </td>
       </tr>
       <tr>
@@ -28,7 +28,7 @@
           <a @click.prevent="doEnterRoom($event, 'retirement')"
              href="/room/retirement"
              class="button start-button"
-             id="button">join</a>
+             id="retirement">join [{{this.numberOfPeople.get('retirement') | defaultToZero }}]</a>
         </td>
       </tr>
     </table>
@@ -43,9 +43,8 @@
           <a @click.prevent="doEnterRoom($event, 'startups')"
              href="/room/startups"
              class="button start-button"
-             id="button">join</a>
+             id="startups">join [{{this.numberOfPeople.get('startups') | defaultToZero }}]</a>
         </td>
-      </tr>
       </tr>
       <tr>
         <td>Local projects</td>
@@ -53,7 +52,7 @@
           <a @click.prevent="doEnterRoom($event, 'local-projects')"
              href="/room/local-projects"
              class="button start-button"
-             id="button">join</a>
+             id="local-projects">join [{{this.numberOfPeople.get('local-projects') | defaultToZero }}]</a>
         </td>
       </tr>
     </table>
@@ -208,6 +207,7 @@
         initialWidth: -1,
         currentChar: 0,
         observer: null,
+        numberOfPeople: new Map(),
       }
     },
     methods: {
@@ -223,10 +223,36 @@
           trackSilentException(err)
         }
       },
+      async updateNumberOfPeople() {
+        let roomStatus
+        let response = await fetch("https://zajebisty.loca.lt/status/")
+        if (response.ok) {
+          roomStatus = await response.json()
+        }
+
+        Object.keys(roomStatus.info.rooms).map(key => {
+          this.numberOfPeople.set(key, Object.keys(roomStatus.info.rooms[key]).length)
+        })
+
+        this.$forceUpdate()
+      }
     },
     watch: {
     },
+    filters: {
+      defaultToZero: function (value) {
+        if (!value) {
+          return '0'
+        }
+
+        return value
+      }
+    },
     async mounted() {
+      await this.updateNumberOfPeople()
+    },
+    created() {
+      this.interval = setInterval(() => this.updateNumberOfPeople(), 5000);
     },
 
     beforeDestroy() {
