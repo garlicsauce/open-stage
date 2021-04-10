@@ -247,7 +247,7 @@
       },
       async updateNumberOfPeople() {
         let roomStatus
-        let response = await fetch(SIGNAL_SERVER_URL + "/status")
+        let response = await fetch("http://szkolna17.loca.lt/status")
         if (response.ok) {
           roomStatus = await response.json()
         }
