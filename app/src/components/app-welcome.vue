@@ -1,274 +1,141 @@
 <template>
   <div class="-scroll">
     <div class="page1">
+
       <div class="logo">
-        <form id="form" @submit.prevent="doEnterRoom">
-          <a @click.prevent="doEnterRoom" :href="url" id="link" class="link">
-            OpenStage<span class="slash">/</span>
-          </a>
-          <wbr />
-          <input
-            type="text"
-            id="room"
-            name="room"
-            ref="input"
-            enterkeyhint="go"
-            spellcheck="false"
-            v-model="room"
-            :placeholder="defaultName"
-          />
-        </form>
-        <div class="button-container">
-          <a
-            @click.prevent="doEnterRoom"
-            :href="url"
-            class="button start-button"
-            id="button"
-            >{{ l.welcome.start }}</a
-          >
-        </div>
+        <a @click.prevent="doEnterRoom" id="link">
+          Open<span style="color: #112242">Stage</span>
+        </a>
       </div>
+
+      <template v-if="!authorised">
+        <div class="login-container">
+          <div class="login-box">
+
+            <div class="container">
+              <form class="form-inline" id="loginForm">
+                <div class="form-group row">
+                  <label class="credentials-label col-sm-2 col-form-label" for="username">User ID </label>
+                  <div class="col-sm-4">
+                    <input class="login-input form-control-plaintext" type="text" name="username" v-model="username"/>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="credentials-label col-sm-2 col-form-label" for="password">Password </label>
+                  <div class="col-sm-10">
+                    <input class="login-input" type="password" name="password" v-model="password"/>
+                  </div>
+                </div>
+
+                <div class="form-group row" style="padding-top: 6px">
+                  <button class="login-button" type="submit" v-on:click="login($event)">Submit</button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </template>
+
+      <template v-else>
+        <button class="login-button" type="submit" v-on:click="logout($event)">Logout</button>
+        <app-rooms></app-rooms>
+      </template>
+
     </div>
   </div>
 </template>
 
 <style lang="scss">
-.page1 {
-  text-align: center;
-  flex-shrink: 0;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  line-height: 1.5;
-
-  /*.text {*/
-  /*  max-width: 40rem;*/
-  /*  margin-left: auto;*/
-  /*  margin-right: auto;*/
-  /*  text-align: left;*/
-  /*  padding: 1rem;*/
-  /*  margin-top: 4rem;*/
-  /*}*/
-
-  a {
-    color: inherit;
-    text-decoration: inherit;
-  }
-
-  .logo {
-    flex: auto;
+  .page1 {
+    text-align: center;
+    flex-shrink: 0;
+    height: 100%;
+    display: flex;
     flex-direction: column;
-    justify-content: center;
-    display: inline-flex;
-    align-items: center;
-    font-variant-ligatures: common-ligatures;
-    padding: 1rem;
-    padding-top: 5rem;
-    font-size: 4rem;
+    line-height: 1.5;
   }
 
-  .dot,
-  .slash {
-    color: white;
-    opacity: 0.8;
-  }
-
-  .button-container {
-    margin-top: 2rem;
-  }
-
-  .button {
-    border: none;
-    background: #112242;
-    color: white;
-    font-weight: 400;
-    font-size: 2rem;
-    border-radius: 0.25rem;
-    padding: 1rem 1.5rem;
-    text-decoration: none;
-
-    &:hover {
-      background: #cbcbcb;
-    }
-
-    &:active {
-      background: #0088c0;
-    }
-  }
-
-  .footer {
-    margin-top: 5rem;
-    opacity: 0.6;
-    padding: 1rem;
-
-    a {
-      color: #cbcbcb;
-      text-decoration: none;
-    }
-
-    a:hover {
-      color: rgba(129, 228, 255, 1);
-    }
-
-    a:active {
-      color: #0088c0;
-    }
-  }
-
-  /*.text a {*/
-  /*  color: #0088c0;*/
-  /*  text-decoration: none;*/
-
-  /*  a:hover {*/
-  /*    color: #cbcbcb;*/
-  /*  }*/
-
-  /*  a:active {*/
-  /*    color: #112242;*/
-  /*  }*/
-  /*}*/
-
-  input,
-  input::placeholder {
-    appearance: none;
-    border: none;
-    background: transparent;
-    color: #112242 !important;
-    font-size: inherit;
-  }
-
-  input {
-    max-width: 90vw !important;
-    width: 1px;
+  .login-container {
+    width: 100%;
+    height: 100%;
     padding: 0;
-    margin: 0;
-    outline: 0;
+    box-sizing: border-box;
+    text-align: center;
   }
 
-  input::placeholder {
-    opacity: 0.5;
-  }
-
-  @media only screen and (max-width: 799px) {
-    .logo {
-      font-size: 8vw;
-    }
-
-    .link {
-      font-size: 12vw;
-      display: block;
-      color: #112242;
-    }
-
-    .button-container {
-      /*margin-top: 4vw;*/
-      margin-top: 4rem;
-    }
-
-    .button {
-      font-size: 4vw;
-    }
-  }
-
-  .brand-icon {
-    margin-left: 0.5rem;
+  .login-box {
     display: inline-block;
-    vertical-align: middle;
-
-    svg {
-      fill: currentColor;
-      color: inherit;
-      width: 1rem; //  auto !important;
-      height: 1rem;
-    }
+    background-color: white;
+    border-top: 1px solid #d8d8d8;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
+    width: 45%;
+    height: 45%;
+    margin: 0 auto;
+    margin-top: 20px;
   }
-}
+
+  .credentials-label {
+    font-size: 14px;
+    text-align: right;
+    color: #999
+  }
+
+  .login-button {
+    background: none;
+    color: #999;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 6px 12px;
+  }
+
+  .login-input {
+    text-align: center;
+    padding: 6px 12px;
+    background: #fff;
+    color: #555;
+    font-size: 14px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+  }
 </style>
 
 <script>
-import { DEBUG, ROOM_PATH } from "../config"
-import { trackSilentException } from "../bugs"
-import { generateName } from "../lib/names"
+  import AppRooms from "./app-rooms"
 
-export default {
-  name: "app-welcome",
-  data() {
-    let defaultName = DEBUG
-      ? process.env.VUE_APP_DEBUG_DEFAULT_ROOM || "raiffeisen"
-      : generateName()
-    return {
-      defaultName,
-      room: defaultName,
-      url: "",
-      initialWidth: -1,
-      currentChar: 0,
-      observer: null,
-    }
-  },
-  methods: {
-    doEnterRoom() {
-      const room = this.room || this.defaultName || ""
-      this.state.room = room
-      try {
-        window.history.pushState(
-          null, // { room },
-          null, // room,
-          ROOM_PATH + room
-        )
-      } catch (err) {
-        trackSilentException(err)
+  export default {
+    name: "app-welcome",
+    components: { AppRooms },
+    data() {
+      return {
+        authorised: localStorage.getItem('user') != null,
+        username: '',
+        password: ''
       }
     },
-    updateInput() {
-      const input = this.$refs.input
-      if (this.initialWidth < 0) this.initialWidth = input.scrollWidth
-      let value = input.value.trim()
-      input.style.width = "1px"
-      input.style.width = (value ? input.scrollWidth : this.initialWidth) + "px"
-      this.url = ROOM_PATH + (value || this.defaultName)
-    },
-    charAnimation() {
-      setTimeout(() => {
-        let input = this.$refs.input
-        if (input) {
-          this.currentChar++
-          this.$refs.input.value = this.defaultName.substr(0, this.currentChar)
-          this.updateInput()
-          if (this.currentChar < this.defaultName.length) {
-            this.charAnimation()
-          }
+    methods: {
+      login(e) {
+        e.preventDefault()
+        if (this.username !== '' && this.password !== '') {
+          localStorage.setItem('user', JSON.stringify({'name': this.username, 'password': this.password}))
+          this.authorised = true
         }
-      }, 100)
-    },
-  },
-  watch: {
-    room() {
-      this.updateInput()
-    },
-  },
-  async mounted() {
-    await this.$nextTick()
-
-    const input = this.$refs.input
-    if (input) {
-      input.style.width = input.scrollWidth + "px"
-      this.updateInput()
-
-      this.observer = new ResizeObserver(this.updateInput)
-      this.observer.observe(document.body)
-
-      this.charAnimation()
-
-      if (
-        !/Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent)
-      ) {
-        input.focus()
+      },
+      logout(e) {
+        e.preventDefault()
+        localStorage.removeItem('user')
+        this.authorised = false
       }
-    }
-  },
+    },
+    watch: {
+    },
+    async mounted() {
+    },
 
-  beforeDestroy() {
-    this.observer?.disconnect()
-  },
-}
+    beforeDestroy() {
+    },
+  }
 </script>
