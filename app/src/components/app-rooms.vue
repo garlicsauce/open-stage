@@ -4,7 +4,7 @@
       <tr>
         <td>Investing</td>
         <td>
-          <a @click.prevent="doEnterRoom($event)"
+          <a @click.prevent="doEnterRoom($event, 'investing')"
              href="/room/investing"
              class="button start-button"
              id="button">join</a>
@@ -13,7 +13,7 @@
       <tr>
         <td>Raiffeisen bank products</td>
         <td>
-          <a @click.prevent="doEnterRoom($event)"
+          <a @click.prevent="doEnterRoom($event, 'bank-products')"
              href="/room/bank-products"
              class="button start-button"
              id="button">join</a>
@@ -22,7 +22,7 @@
       <tr>
         <td>Room 3</td>
         <td>
-          <a @click.prevent="doEnterRoom($event)"
+          <a @click.prevent="doEnterRoom($event, 'room3')"
              href="/room/room3"
              class="button start-button"
              id="button">join</a>
@@ -171,19 +171,12 @@
 </style>
 
 <script>
-  import {DEBUG} from "../config"
   import {trackSilentException} from "../bugs"
-  import {generateName} from "../lib/names"
 
   export default {
     name: "app-rooms",
     data() {
-      let defaultName = DEBUG
-        ? process.env.VUE_APP_DEBUG_DEFAULT_ROOM || "raiffeisen"
-        : generateName()
       return {
-        defaultName,
-        room: defaultName,
         url: "",
         initialWidth: -1,
         currentChar: 0,
@@ -191,11 +184,8 @@
       }
     },
     methods: {
-      doEnterRoom(event) {
-        console.log(event)
-        console.log(event.target.href)
-        const room = this.room || this.defaultName || ""
-        this.state.room = room
+      doEnterRoom(event, roomName) {
+        this.state.room = roomName || ""
         try {
           window.history.pushState(
             null, // { room },

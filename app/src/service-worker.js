@@ -25,7 +25,7 @@ const whitelistRoomPath = new RegExp(
 workbox.routing.registerNavigationRoute(
   workbox.precaching.getCacheKeyForURL("/index.html"),
   {
-    whitelist: [/^\/ng.*$/, whitelistRoomPath],
+    whitelist: [/^\/room.*$/, whitelistRoomPath],
   }
 )
 
