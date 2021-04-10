@@ -449,9 +449,6 @@ export default {
   beforeDestroy() {
     document.removeEventListener("fullscreenchange", this.fullscreenHandler)
     this.conn?.cleanup()
-  },
-  addOffer(roomId, title, type, description, photo, price, duration, author) {
-    messages.emit('addOffer', {roomId, title, type, description, photo, price, duration, author})
-  },
+  }
 }
 </script>

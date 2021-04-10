@@ -2,15 +2,18 @@
   <div class="trade-container -scrollable text">
     <form>
       <label for="itemName">Item name</label>
-      <input class="input" type="text" id="itemName">
+      <input class="input" type="text" id="itemName" v-model="item.name">
 
       <label for="itemDesc">Description</label>
-      <input class="input" type="text" id="itemDesc">
+      <input class="input" type="text" id="itemDesc" v-model="item.description">
 
       <label for="itemPrice">Price</label>
-      <input class="input" type="text" id="itemPrice">
+      <input class="input" type="number" id="itemPrice" v-model="item.price">
 
-      <input class="toggle" type="checkbox" id="toggle">
+      <label for="itemDuration">Offer duration [minutes]</label>
+      <input class="input" type="number" id="itemDuration" v-model="item.duration">
+
+      <input class="toggle" type="checkbox" id="toggle" v-model="toggleValue">
       <label class="label" for="toggle">
         <div class="left">
           Sell offer
@@ -24,6 +27,8 @@
           Auction
         </div>
       </label>
+
+      <sea-button class="submit" v-on:click="createOffer">Create offer</sea-button>
     </form>
   </div>
 </template>
@@ -125,12 +130,18 @@
     .left, .right {
       margin: 0 .5em;
     }
+
+    .submit {
+      float: right;
+      margin-top: 2rem;
+    }
   }
 </style>
 
 <script>
   import {createLinkForRoom} from "../lib/share"
   import SeaButton from "../ui/sea-button"
+  import {messages} from "../lib/emitter";
 
   const log = require("debug")("app:app-trade")
 
@@ -139,11 +150,39 @@
     components: { SeaButton },
     data() {
       return {
+        item: {
+          name: null,
+          description: null,
+          price: null,
+          type: null,
+          duration: null
+        },
+        toggleState: false,
         url: "",
       }
     },
     methods: {
-
+      createOffer(event) {
+        let type = this.toggleValue ? 'auction' : 'sell'
+        this.addOffer(event, this.state.room, this.item.name, type, this.item.description, null, this.item.price, this.item.duration, this.state.user)
+      },
+      addOffer(event, roomId, title, type, description, photo, price, duration, author) {
+        event.preventDefault()
+        let info = {roomId, title, type, description, photo, price, duration, author}
+        console.log(info)
+        messages.emit('addOffer', info)
+      }
+    },
+    computed: {
+      toggleValue: {
+        get() {
+          return this.toggleState
+        },
+        set(newVal) {
+          this.toggleState = newVal
+          console.log(this.toggleState)
+        }
+      }
     },
     async mounted() {
       this.url = createLinkForRoom(this.state.room)
