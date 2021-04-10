@@ -218,6 +218,7 @@
 
 <script>
   import {trackSilentException} from "../bugs"
+  import {SIGNAL_SERVER_URL} from "../config";
 
   export default {
     name: "app-rooms",

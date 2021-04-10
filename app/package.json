@@ -33,6 +33,7 @@
     "electron >= 8"
   ],
   "dependencies": {
+    "@mojs/core": "^1.0.3",
     "@sentry/browser": "^6.2.5",
     "@sentry/integrations": "^6.2.5",
     "@tensorflow-models/body-pix": "^2.0.5",

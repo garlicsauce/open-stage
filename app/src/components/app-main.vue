@@ -57,11 +57,25 @@
 
         <div class="message-container error" style="top: 2rem;bottom: auto;" v-if="state.offer.title">
           <div class="message">
-            {{ state.offer.author.name }} wants to sell <strong>{{ state.offer.title }}</strong> for RCN {{ state.offer.price }}
-
-            <img :src="state.offer.photo" />
-
-            {{ state.offer.description }}
+            <div class="current-offer">
+              <div class="offer-left-column">
+                <img class="active" :src="state.offer.photo"/>
+              </div>
+              <div class="offer-right-column">
+                <div class="product-description">
+                  <h1>{{state.offer.title}}</h1>
+                  <p>{{state.offer.description}}</p>
+                </div>
+                <div class="product-price">
+                  <span id="rcnbidprice">{{state.offer.price}} RCN</span>
+                  <a href="#" class="cart-btn" v-if="state.offer.type === 'sell'">Buy</a>
+                  <a class="cart-btn" v-else-if="state.offer.type === 'auction'" v-on:click="bidOffer">Bid</a>
+                </div>
+                <div class="seller-info">
+                  <span>Seller: </span><p>{{state.offer.author.name}}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -319,146 +333,272 @@
   </div>
 </template>
 
-<script>
-import { messages } from "../lib/emitter"
-import { createLinkForRoom, shareLink } from "../lib/share"
-import { setup } from "../state"
-import SeaButton from "../ui/sea-button"
-import SeaLink from "../ui/sea-link"
-import SeaModal from "../ui/sea-modal"
-import AppVideo from "./app-video"
-import { setAllowedBugTracking } from "../bugs"
-import { setBackgroundImage } from "../logic/background"
-
-const log = require("debug")("app:app-sidebar")
-
-export default {
-  name: "app-main",
-  components: {
-    AppSettings: () =>
-      import(/* webpackChunkName: 'settings' */ "./app-settings"),
-    AppShare: () => import(/* webpackChunkName: 'share' */ "./app-share"),
-    AppTrade: () => import(/* webpackChunkName: 'trade' */ "./app-trade"),
-    SeaLink,
-    SeaModal,
-    SeaButton,
-    AppVideo,
-  },
-  data() {
-    return {
-      mode: "",
-      settings: false,
-      share: false,
-      conn: null,
-      dragOver: false,
-      supportsFullscreen: document.fullscreenEnabled,
-      isFullScreen: false,
-      fullscreenHandler: null,
-      symbol:
-        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>',
-    }
-  },
-  computed: {
-    hasPeers() {
-      return Object.keys(this.state.status).length > 0
-    },
-    peers() {
-      return this.state.screenshots ? [2, 3] : this.state.status
-    },
-    videoAllowed() {
-      if (window.webkit != null) {
-        return this.mode === ""
-      }
-      return true
-    },
-  },
-  methods: {
-    doShare() {
-      shareLink(createLinkForRoom(this.state.room))
-    },
-    doVideo() {
-      this.state.muteVideo = !this.state.muteVideo
-      messages.emit("updateStream")
-    },
-    doAudio() {
-      this.state.muteAudio = !this.state.muteAudio
-      messages.emit("updateStream")
-    },
-    doQuit() {
-      if (confirm("Really quit this session?")) {
-        location.assign("/")
-      }
-    },
-    doReload() {
-      location.reload()
-    },
-    doAllow(allow) {
-      if (allow) {
-        setAllowedBugTracking(allow)
-      }
-      this.state.requestBugTracking = false
-    },
-    doToggleFullScreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen()
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen()
-        }
-      }
-    },
-    doTogglePanel(mode = "settings") {
-      this.mode = !mode || this.mode === mode ? "" : mode
-    },
-    onDragOver(ev) {
-      ev.preventDefault()
-      ev.dataTransfer.dropEffect = "copy"
-      this.dragOver = true
-    },
-    onDragEnd(ev) {
-      this.dragOver = false
-      ev.preventDefault()
-    },
-    onDrop(ev) {
-      this.dragOver = false
-      ev.preventDefault()
-      let dataProvider = ev.dataTransfer || ev.clipboardData
-      if (dataProvider) {
-        const files = dataProvider?.files || []
-        if (files.length) {
-          let url = URL.createObjectURL(files[0])
-          setBackgroundImage(url)
-          this.state.backgroundImageURL = url
-          this.state.backgroundAuthor = ""
-          this.state.backgroundURL = ""
-
-          // If just the background mode changes, don't restart the whole thing
-          // if ((value && !prevValue) || (prevValue && !value)) {
-          if (this.state.backgroundImageURL !== "image") {
-            this.state.backgroundMode = "image"
-            messages.emit("switchMedia")
-          }
-          // }
-        }
-      }
-    },
-    didChangeFullscreen(ev) {},
-  },
-  mounted() {
-    setTimeout(async () => {
-      this.conn = await setup()
-    }, 50)
-    if (!this.hasPeers && !window.iPhone) {
-      this.mode = "share"
-    }
-    this.fullscreenHandler = (ev) => {
-      this.isFullScreen = !!document.fullscreenElement
-    }
-    document.addEventListener("fullscreenchange", this.fullscreenHandler)
-  },
-  beforeDestroy() {
-    document.removeEventListener("fullscreenchange", this.fullscreenHandler)
-    this.conn?.cleanup()
+<style>
+  .current-offer {
+    margin: 0 auto;
+    padding: 15px;
+    display: flex;
   }
-}
+
+  .offer-left-column {
+    width: 60%;
+    position: relative;
+  }
+
+  .offer-right-column {
+    width: 40%;
+    margin-top: 30px;
+    margin-right: 10px;
+  }
+
+  .offer-left-column img {
+    width: 70%;
+    position: relative;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  .offer-left-column img.active {
+    opacity: 1;
+  }
+
+  /* Product Description */
+  .product-description {
+    border-bottom: 1px solid #E1E8EE;
+    margin-bottom: 20px;
+  }
+  .product-description span {
+    font-size: 12px;
+    color: #358ED7;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .product-description h1 {
+    font-weight: 300;
+    font-size: 52px;
+    color: #43484D;
+    letter-spacing: -2px;
+  }
+  .product-description p {
+    font-size: 16px;
+    font-weight: 300;
+    color: #86939E;
+    line-height: 24px;
+  }
+
+  /* Product Price */
+  .product-price {
+    display: flex;
+    align-items: center;
+  }
+
+  .product-price span {
+    font-size: 26px;
+    font-weight: 300;
+    color: #43474D;
+    margin-right: 20px;
+  }
+
+  .cart-btn {
+    display: inline-block;
+    background-color: #7DC855;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 12px 30px;
+    transition: all .5s;
+  }
+  .cart-btn:hover {
+    background-color: #64af3d;
+  }
+
+  .seller-info p {
+    font-size: 14px;
+    color: #112242;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline;
+  }
+
+  .seller-info span {
+    font-size: 12px;
+    color: #358ED7;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline;
+  }
+</style>
+
+<script>
+  import {messages} from "../lib/emitter"
+  import {createLinkForRoom, shareLink} from "../lib/share"
+  import {setup} from "../state"
+  import SeaButton from "../ui/sea-button"
+  import SeaLink from "../ui/sea-link"
+  import SeaModal from "../ui/sea-modal"
+  import AppVideo from "./app-video"
+  import {setAllowedBugTracking} from "../bugs"
+  import {setBackgroundImage} from "../logic/background"
+  import mojs from '@mojs/core'
+
+  const burst = new mojs.Burst({
+    left: 0, top: 0,
+    radius:   { 0: 100 },
+    count:    5,
+    children: {
+      shape:        'circle',
+      radius:       20,
+      fill:         [ 'deeppink', 'cyan', 'yellow' ],
+      strokeWidth:  5,
+      duration:     2000
+    }
+  });
+
+  const log = require("debug")("app:app-sidebar")
+
+  messages.on('priceBounce', function() {
+    burst
+      .tune({ x: document.getElementById("rcnbidprice").offsetLeft, y: document.getElementById("rcnbidprice").offsetTop })
+      .setSpeed(3)
+      .replay()
+  });
+
+  export default {
+    name: "app-main",
+    components: {
+      AppSettings: () =>
+        import(/* webpackChunkName: 'settings' */ "./app-settings"),
+      AppShare: () => import(/* webpackChunkName: 'share' */ "./app-share"),
+      AppTrade: () => import(/* webpackChunkName: 'trade' */ "./app-trade"),
+      SeaLink,
+      SeaModal,
+      SeaButton,
+      AppVideo,
+    },
+    data() {
+      return {
+        mode: "",
+        settings: false,
+        share: false,
+        conn: null,
+        dragOver: false,
+        supportsFullscreen: document.fullscreenEnabled,
+        isFullScreen: false,
+        fullscreenHandler: null,
+        symbol:
+          '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>',
+      }
+    },
+    computed: {
+      hasPeers() {
+        return Object.keys(this.state.status).length > 0
+      },
+      peers() {
+        return this.state.screenshots ? [2, 3] : this.state.status
+      },
+      videoAllowed() {
+        if (window.webkit != null) {
+          return this.mode === ""
+        }
+        return true
+      },
+    },
+    methods: {
+      doShare() {
+        shareLink(createLinkForRoom(this.state.room))
+      },
+      bidOffer() {
+        messages.emit("bidOffer", {roomId: this.state.room})
+      },
+      doVideo() {
+        this.state.muteVideo = !this.state.muteVideo
+        messages.emit("updateStream")
+      },
+      doAudio() {
+        this.state.muteAudio = !this.state.muteAudio
+        messages.emit("updateStream")
+      },
+      doQuit() {
+        if (confirm("Really quit this session?")) {
+          location.assign("/")
+        }
+      },
+      doReload() {
+        location.reload()
+      },
+      doAllow(allow) {
+        if (allow) {
+          setAllowedBugTracking(allow)
+        }
+        this.state.requestBugTracking = false
+      },
+      doToggleFullScreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen()
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen()
+          }
+        }
+      },
+      doTogglePanel(mode = "settings") {
+        this.mode = !mode || this.mode === mode ? "" : mode
+      },
+      onDragOver(ev) {
+        ev.preventDefault()
+        ev.dataTransfer.dropEffect = "copy"
+        this.dragOver = true
+      },
+      onDragEnd(ev) {
+        this.dragOver = false
+        ev.preventDefault()
+      },
+      onDrop(ev) {
+        this.dragOver = false
+        ev.preventDefault()
+        let dataProvider = ev.dataTransfer || ev.clipboardData
+        if (dataProvider) {
+          const files = dataProvider?.files || []
+          if (files.length) {
+            let url = URL.createObjectURL(files[0])
+            setBackgroundImage(url)
+            this.state.backgroundImageURL = url
+            this.state.backgroundAuthor = ""
+            this.state.backgroundURL = ""
+
+            // If just the background mode changes, don't restart the whole thing
+            // if ((value && !prevValue) || (prevValue && !value)) {
+            if (this.state.backgroundImageURL !== "image") {
+              this.state.backgroundMode = "image"
+              messages.emit("switchMedia")
+            }
+            // }
+          }
+        }
+      },
+      didChangeFullscreen(ev) {},
+    },
+    mounted() {
+      setTimeout(async () => {
+        this.conn = await setup()
+      }, 50)
+      if (!this.hasPeers && !window.iPhone) {
+        this.mode = "share"
+      }
+      this.fullscreenHandler = (ev) => {
+        this.isFullScreen = !!document.fullscreenElement
+      }
+      document.addEventListener("fullscreenchange", this.fullscreenHandler)
+    },
+    beforeDestroy() {
+      document.removeEventListener("fullscreenchange", this.fullscreenHandler)
+      this.conn?.cleanup()
+    }
+  }
 </script>

@@ -157,6 +157,17 @@ io.on('connection', function (socket) {
     }, offer.duration * 10000)
   });
 
+
+  socket.on('bidOffer', ({roomId}) => {
+    let offer = getOffer(roomId)
+
+    if (offer != null) {
+      offer.price = offer.price + 5
+      addOffer(roomId, offer)
+      io.emit("updateOffer", offer)
+    }
+  });
+
   // Ask for a connection to another socket via ID
   socket.on('signal', data => {
     log('signal', data.from, data.to)

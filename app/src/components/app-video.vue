@@ -67,9 +67,9 @@
         title="Verification code"
         class="-short"
         style="right: auto;left: 0.5rem; background: rgb(195 184 30 / 50%);"
-        @click.stop.prevent="transferReputation(localId, id, 5)"
+        @click.stop.prevent="transferReputation($event, localId, id, 5)"
       >    
-        <i class="far fa-gem"></i> <span style="margin-left: 5px;">{{ reputation }} Reputation</span>
+        <i class="far fa-gem"></i> <span style="margin-left: 5px;">{{ reputation }} RTC</span>
       </label>
       <label
         title="Verification code"
@@ -133,6 +133,21 @@
 <script>
 import { trackSilentException } from "../bugs"
 import { messages } from "../lib/emitter"
+import mojs from '@mojs/core'
+
+const burst = new mojs.Burst({
+  left: 0, top: 0,
+  radius:   { 0: 100 },
+  count:    5,
+  children: {
+    shape:        'circle',
+    radius:       20,
+    fill:         [ 'deeppink', 'cyan', 'yellow' ],
+    strokeWidth:  5,
+    duration:     2000
+  }
+});
+
 
 const log = require("debug")("app:app-peer")
 
@@ -205,8 +220,13 @@ export default {
           })
       }
     },
-    transferReputation(sid1, sid2, value) {
+    transferReputation(event, sid1, sid2, value) {
       messages.emit('transferReputation', {sid1, sid2, value})
+      const coords = { x: event.pageX, y: event.pageY }
+      burst
+        .tune({ x: event.pageX, y: event.pageY })
+        .setSpeed(3)
+        .replay()
     },
     async doConnectStream(stream) {
       log("doConnectStream", this.title, stream)

@@ -154,6 +154,13 @@ export class WebRTC extends Emitter {
         }
       })
 
+      this.io.on("updateOffer", (offer) => {
+        if (offer.roomId == this.room) {
+          state.offer = offer
+          messages.emit("priceBounce")
+        }
+      })
+
       this.io.on("endOffer", (offer) => {
         if (offer.roomId == this.room) {
           state.offer = {}
@@ -166,6 +173,10 @@ export class WebRTC extends Emitter {
 
       messages.on("addOffer", ({roomId, title, type, description, photo, price, duration, author}) => {
         this.io.emit("addOffer", {roomId, title, type, description, photo, price, duration, author})
+      })
+
+      messages.on("bidOffer", ({roomId}) => {
+        this.io.emit("bidOffer", {roomId})
       })
     })
   }
