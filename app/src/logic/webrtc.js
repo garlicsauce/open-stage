@@ -21,6 +21,9 @@ export class WebRTC extends Emitter {
 
   static async checkStatus() {
     let socket = io(SIGNAL_SERVER_URL, {
+      extraHeaders: {
+        "Bypass-Tunnel-Reminder": "KononowiczKrzysztof"
+      }
       // transports: ['websocket'],
     })
 
@@ -51,6 +54,9 @@ export class WebRTC extends Emitter {
 
     // https://socket.io/docs/client-api/
     this.io = io(SIGNAL_SERVER_URL, {
+      extraHeaders: {
+        "Bypass-Tunnel-Reminder": "KononowiczKrzysztof"
+      }
       // transports: ['websocket'],
     })
     assert(this.io, `should not fail to reach out to ${SIGNAL_SERVER_URL}`)
