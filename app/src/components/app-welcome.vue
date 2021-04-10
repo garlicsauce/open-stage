@@ -160,8 +160,9 @@
       login(e) {
         e.preventDefault()
         if (this.username !== '' && this.password !== '') {
-          localStorage.setItem('user', JSON.stringify({'name': this.username, 'password': this.password}))
-          this.state.user = this.username
+          let user = {'name': this.username, 'password': this.password}
+          localStorage.setItem('user', JSON.stringify(user))
+          this.state.user = user
           this.authorised = true
         }
       },
