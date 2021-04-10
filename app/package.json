@@ -1,5 +1,5 @@
 {
-  "name": "briefing",
+  "name": "openstage",
   "description": "Secure direct video chat",
   "version": "1.18.3",
   "private": true,
@@ -38,6 +38,7 @@
     "@tensorflow-models/body-pix": "^2.0.5",
     "@tensorflow/tfjs-converter": "^1.7.4",
     "@tensorflow/tfjs-core": "^1.7.4",
+    "bootstrap": "^4.6.0",
     "clipboard-copy": "^4.0.1",
     "core-js": "^3.10.0",
     "custom-electron-titlebar": "^3.2.6",
@@ -47,6 +48,7 @@
     "simple-peer": "^9.10.0",
     "socket.io-client": "^2.4.0",
     "uuid": "^8.3.2",
+    "uuid-class": "^0.12.3",
     "vue": "^2.6.12",
     "vue-template-compiler": "^2.6.12"
   },

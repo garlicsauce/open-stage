@@ -8,7 +8,7 @@ document.title = "Briefings"
 import { Color, Titlebar } from "custom-electron-titlebar"
 
 new Titlebar({
-  backgroundColor: Color.fromHex("#272727"),
+  backgroundColor: Color.fromHex("#b4c72e"),
   titleHorizontalAlignment: "left",
   menu: null,
 })

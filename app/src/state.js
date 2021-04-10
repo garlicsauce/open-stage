@@ -21,7 +21,7 @@ const screenshots = false
 
 // ROOM
 
-const isOriginalBriefing = ROOM_PATH === "/ng/"
+const isOriginalBriefing = ROOM_PATH === "/room"
 
 let room
 const pathname = location.pathname

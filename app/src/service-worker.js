@@ -1,6 +1,6 @@
 // --- END GENERATED CODE, START CUSTOM CODE
 
-var ROOM_PATH = "/ng/"
+var ROOM_PATH = "/room/"
 
 workbox.setConfig({ debug: true })
 
@@ -25,7 +25,7 @@ const whitelistRoomPath = new RegExp(
 workbox.routing.registerNavigationRoute(
   workbox.precaching.getCacheKeyForURL("/index.html"),
   {
-    whitelist: [/^\/ng.*$/, whitelistRoomPath],
+    whitelist: [/^\/room.*$/, whitelistRoomPath],
   }
 )
 

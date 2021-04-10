@@ -1,6 +1,6 @@
 {
-  "name": "Briefing",
-  "short_name": "Briefing",
+  "name": "Openstage",
+  "short_name": "Openstage",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -16,8 +16,8 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#272727",
-  "theme_color": "#272727",
+  "background_color": "#b4c72e",
+  "theme_color": "#b4c72e",
   "author": "Dirk Holtwick",
   "description": "Secure direct video chat",
   "homepage_url": "https://brie.fi/",
@@ -28,7 +28,7 @@
       "src": "https://brie.fi/sample.jpg",
       "type": "image/png",
       "size": "1478x1988",
-      "description": "Screenshot Briefing App"
+      "description": "Screenshot Openstage App"
     }
   ],
   "features": [

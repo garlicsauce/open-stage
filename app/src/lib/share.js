@@ -12,7 +12,7 @@ export const canCopy = !canShare
 export async function shareLink(
   url,
   {
-    title = "Briefing URL",
+    title = "Openstage URL",
     text = "Please open the link in your browser to join the video conference",
   } = {}
 ) {
