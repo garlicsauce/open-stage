@@ -218,6 +218,7 @@
 
 <script>
   import {trackSilentException} from "../bugs"
+  import {SIGNAL_SERVER_URL} from "../config";
 
   export default {
     name: "app-rooms",
@@ -246,7 +247,7 @@
       },
       async updateNumberOfPeople() {
         let roomStatus
-        let response = await fetch("https://szkolna17.loca.lt/status/")
+        let response = await fetch(SIGNAL_SERVER_URL + "/status")
         if (response.ok) {
           roomStatus = await response.json()
         }
