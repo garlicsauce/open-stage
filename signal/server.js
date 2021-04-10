@@ -149,11 +149,11 @@ io.on('connection', function (socket) {
 
     addOffer(roomId, offer)
 
-    socket.emit("newOffer", offer)
+    io.emit("newOffer", offer)
 
     setTimeout(function() {
       removeOffer(roomId)
-      socket.emit("endOffer", offer)
+      io.emit("endOffer", offer)
     }, offer.duration * 10000)
   });
 
