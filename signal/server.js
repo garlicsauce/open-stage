@@ -154,7 +154,7 @@ io.on('connection', function (socket) {
     setTimeout(function() {
       removeOffer(roomId)
       socket.emit("endOffer", offer)
-    }, offer.duration * 1000)
+    }, offer.duration * 10000)
   });
 
   // Ask for a connection to another socket via ID

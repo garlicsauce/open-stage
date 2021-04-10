@@ -90,7 +90,7 @@ export class WebRTC extends Emitter {
       state.offer = offer
 
       console.log(state)
-      
+
       log("me", local, room, "peers", peers)
 
       // We will try to establish a separate connection to all of them

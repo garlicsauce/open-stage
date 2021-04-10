@@ -55,6 +55,16 @@
           </div>
         </div>
 
+        <div class="message-container error" style="top: 2rem;bottom: auto;" v-if="state.offer.title">
+          <div class="message">
+            {{ state.offer.author.name }} wants to sell <strong>{{ state.offer.title }}</strong> for RCN {{ state.offer.price }}
+
+            <img :src="state.offer.photo" />
+
+            {{ state.offer.description }}
+          </div>
+        </div>
+
         <div class="message-container -error" v-else-if="false">
           <div class="message">
             {{ state.error }}
