@@ -5,30 +5,30 @@
         <th colspan="2">Financial rooms</th>
       </tr>
       <tr>
-        <td>Investing</td>
-        <td>
+        <td id="investing-name">Investing</td>
+        <td id="investing-join">
           <a @click.prevent="doEnterRoom($event, 'investing')"
              href="/room/investing"
              class="button start-button"
-             id="button">join</a>
+             id="investing">join [{{this.numberOfPeople.get('investing') | defaultToZero }}]</a>
         </td>
       </tr>
       <tr>
-        <td>Stock</td>
-        <td>
+        <td id="stock-name">Stock</td>
+        <td id="stock-join">
           <a @click.prevent="doEnterRoom($event, 'stock')"
              href="/room/stock"
              class="button start-button"
-             id="button">join</a>
+             id="stock">join [{{this.numberOfPeople.get('stock') | defaultToZero }}]</a>
         </td>
       </tr>
       <tr>
-        <td>Retirement</td>
-        <td>
+        <td id="retirement-name">Retirement</td>
+        <td id="retirement-join">
           <a @click.prevent="doEnterRoom($event, 'retirement')"
              href="/room/retirement"
              class="button start-button"
-             id="button">join</a>
+             id="retirement">join [{{this.numberOfPeople.get('retirement') | defaultToZero }}]</a>
         </td>
       </tr>
     </table>
@@ -38,22 +38,21 @@
         <th colspan="2">Luxembourg</th>
       </tr>
       <tr>
-        <td>Startups</td>
-        <td>
+        <td id="startups-name">Startups</td>
+        <td id="startups-join">
           <a @click.prevent="doEnterRoom($event, 'startups')"
              href="/room/startups"
              class="button start-button"
-             id="button">join</a>
+             id="startups">join [{{this.numberOfPeople.get('startups') | defaultToZero }}]</a>
         </td>
       </tr>
-      </tr>
       <tr>
-        <td>Local projects</td>
-        <td>
+        <td id="local-projects-name">Local projects</td>
+        <td id="local-projects-join">
           <a @click.prevent="doEnterRoom($event, 'local-projects')"
              href="/room/local-projects"
              class="button start-button"
-             id="button">join</a>
+             id="local-projects">join [{{this.numberOfPeople.get('local-projects') | defaultToZero }}]</a>
         </td>
       </tr>
     </table>
@@ -195,6 +194,26 @@
       border-bottom: 0;
     }
   }
+
+  div.avatar {
+    /* make a square container */
+    width: 45px;
+    height: 45px;
+
+    /* round the edges to a circle with border radius 1/2 container size */
+    border-radius: 50%;
+
+    /* display in the right part of container */
+    float: right;
+    display: inline;
+  }
+
+  img.avatar {
+    object-fit: cover;
+    border-radius:50%;
+    width: 45px;
+    height: 45px;
+  }
 </style>
 
 <script>
@@ -208,6 +227,8 @@
         initialWidth: -1,
         currentChar: 0,
         observer: null,
+        numberOfPeople: new Map(),
+        appStatus: null,
       }
     },
     methods: {
@@ -223,10 +244,75 @@
           trackSilentException(err)
         }
       },
+      async updateNumberOfPeople() {
+        let roomStatus
+        let response = await fetch("https://zajebisty.loca.lt/status/")
+        if (response.ok) {
+          roomStatus = await response.json()
+        }
+
+        this.appStatus = roomStatus
+        Object.keys(roomStatus.info.rooms).map(key => {
+          this.numberOfPeople.set(key, Object.keys(roomStatus.info.rooms[key]).length)
+
+          let numberOfPpl = this.numberOfPeople.get(key)
+          let parent = document.getElementById(key + '-name')
+          parent.querySelectorAll('div').forEach(n => n.remove())
+          parent.querySelectorAll('p').forEach(n => n.remove())
+          if (numberOfPpl > 0) {
+            let userhashes = Object.keys(this.appStatus.info.rooms[key])
+            userhashes.every(userhash => {
+              if (userhashes.length > 2 && parent.querySelectorAll('p').length == 0) {
+                let others = document.createElement('p')
+                others.id = 'others'
+                others.innerText = '+' + (userhashes.length - 2)
+                others.style = 'display: inline; float: right'
+
+                parent.appendChild(others)
+              }
+
+              if (parent.querySelectorAll('div').length < 2) {
+                let avatar = this.appStatus.info.users[userhash].avatar
+
+                let avatarDiv = document.createElement('div')
+                avatarDiv.id = 'avatar-' + userhash
+                avatarDiv.className = 'avatar'
+
+                parent.appendChild(avatarDiv)
+
+                let avatarImg = document.createElement('img')
+                avatarImg.id = 'avatar-b64-' + userhash
+                avatarImg.className = 'avatar'
+                avatarImg.src = avatar
+
+                avatarDiv.appendChild(avatarImg)
+                return true
+              } else {
+                return false
+              }
+            })
+          }
+        })
+
+        this.$forceUpdate()
+      }
     },
     watch: {
     },
+    filters: {
+      defaultToZero: function (value) {
+        if (!value) {
+          return '0'
+        }
+
+        return value
+      }
+    },
     async mounted() {
+      await this.updateNumberOfPeople()
+    },
+    created() {
+      this.interval = setInterval(() => this.updateNumberOfPeople(), 5000);
     },
 
     beforeDestroy() {
