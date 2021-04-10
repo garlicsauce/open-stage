@@ -2,7 +2,7 @@
 
 import SimplePeer from "simple-peer"
 import { cloneObject } from "../lib/base"
-import { Emitter } from "../lib/emitter"
+import { Emitter, messages } from "../lib/emitter"
 import { trackException } from "../bugs"
 import {
   getFingerprintString,

@@ -114,6 +114,21 @@ io.on('connection', function (socket) {
     }
   })
 
+  socket.on('transferReputation', ({ sid1, sid2, value }) => {
+    let users = getUsers()
+    let fromUser = users[sid1]
+    let toUser = users[sid2]
+
+    fromUser.reputation = fromUser.reputation - value
+    toUser.reputation = toUser.reputation + value
+
+    addUser(sid1, fromUser)
+    addUser(sid2, toUser)
+
+    io.emit('userUpdate', fromUser)
+    io.emit('userUpdate', toUser)
+  })
+
   // Ask for a connection to another socket via ID
   socket.on('signal', data => {
     log('signal', data.from, data.to)

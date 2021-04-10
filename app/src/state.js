@@ -130,6 +130,11 @@ function updateStream() {
   }
 }
 
+export function setUser(user) {
+  state.user = user
+  window.localStorage.setItem("user", JSON.stringify(user))
+}
+
 messages.on("switchMedia", switchMedia)
 
 let blurLib

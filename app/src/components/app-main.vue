@@ -34,9 +34,12 @@
           v-for="peer in peers"
           :key="peer.remote"
           :id="peer.remote"
+          :localId="peer.local"
           :stream="peer && peer.peer && peer.peer.stream"
           :fingerprint="peer && peer.peer && peer.peer.fingerprint"
           :name="peer && peer.peer && peer.peer.user && peer.peer.user.name"
+          :position="peer && peer.peer && peer.peer.user && peer.peer.user.position"  
+          :reputation="peer && peer.peer && peer.peer.user && peer.peer.user.reputation"
         />
 
         <div

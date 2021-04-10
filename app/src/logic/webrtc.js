@@ -4,8 +4,8 @@ import io from "socket.io-client"
 import { UUID } from "../lib/uuid.js"
 import { SIGNAL_SERVER_URL } from "../config"
 import { assert } from "../lib/assert"
-import { Emitter } from "../lib/emitter"
-import { state } from "../state"
+import { Emitter, messages } from "../lib/emitter"
+import { state, setUser } from "../state"
 import { WebRTCPeer } from "./webrtc-peer"
 
 const log = require("debug")("app:webrtc")
@@ -106,6 +106,8 @@ export class WebRTC extends Emitter {
             wrtc,
           })
         }
+
+        peer.user = users[from]
         peer.signal(signal)
         this.updateStatus()
       })
@@ -122,6 +124,27 @@ export class WebRTC extends Emitter {
       }
 
       this.updateStatus()
+
+      this.io.on("userUpdate", (user) => {
+        if (user.name == state.user.name) {
+          setUser(user)
+        }
+
+        console.log(this.peerConnections)
+
+        for (const [id, peerConnected] of Object.entries(this.peerConnections)) {
+          if (peerConnected.user.name == user.name) {
+            this.peerConnections[id].user = user;
+          } 
+        }
+        
+        this.updateStatus()
+      })
+
+      messages.on("transferReputation", ({sid1, sid2, value}) => {        
+        this.io.emit("transferReputation", { sid1, sid2, value })
+      })
+
     })
   }
 

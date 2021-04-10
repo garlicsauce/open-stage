@@ -49,22 +49,27 @@
         class="-short"
         @click.stop.prevent="doToggleShow"
         v-show="!showCode"
+        style="background: rgb(0 0 0 / 50%);"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="feather feather-shield"
-        >
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-        </svg>
-        {{ name }} - {{ fingerprint.substr(fingerprint.length - 4, 4) }}
+      <i class="fas fa-user-tie"></i> <span style="margin-left: 5px;">{{ name }}</span><span style="margin-left: 5px;"> - {{ position }}</span>      </label>
+
+      <label
+        title="Verification code"
+        class="-short"
+        style="right: auto;bottom: 2.2rem;left: 0.5rem;background: rgba(195, 184, 30, 0.5);"
+        @click.stop.prevent="doToggleShow"
+        v-show="!showCode"
+      >
+        <i class="fas fa-hands-helping"></i><span style="margin-left: 5px;">Ask for private advise</span>
+      </label>
+
+            <label
+        title="Verification code"
+        class="-short"
+        style="right: auto;left: 0.5rem; background: rgb(195 184 30 / 50%);"
+        @click.stop.prevent="transferReputation(localId, id, 5)"
+      >    
+        <i class="far fa-gem"></i> <span style="margin-left: 5px;">{{ reputation }} Reputation</span>
       </label>
       <label
         title="Verification code"
@@ -127,6 +132,7 @@
 
 <script>
 import { trackSilentException } from "../bugs"
+import { messages } from "../lib/emitter"
 
 const log = require("debug")("app:app-peer")
 
@@ -160,9 +166,18 @@ export default {
     name: {
       type: String,
     },
+    reputation: {
+      type: Number,
+    },
+    position: {
+      type: String,
+    },
     id: {
       type: String,
     },
+    localId: {
+      type: String,
+    }
   },
   data() {
     return {
@@ -189,6 +204,9 @@ export default {
             }
           })
       }
+    },
+    transferReputation(sid1, sid2, value) {
+      messages.emit('transferReputation', {sid1, sid2, value})
     },
     async doConnectStream(stream) {
       log("doConnectStream", this.title, stream)
