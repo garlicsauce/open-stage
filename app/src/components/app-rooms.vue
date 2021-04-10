@@ -246,7 +246,7 @@
       },
       async updateNumberOfPeople() {
         let roomStatus
-        let response = await fetch("https://zajebisty.loca.lt/status/")
+        let response = await fetch("https://szkolna17.loca.lt/status/")
         if (response.ok) {
           roomStatus = await response.json()
         }
