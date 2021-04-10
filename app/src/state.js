@@ -107,7 +107,7 @@ export let state = {
 
   screenshots,
 
-  user: window.localStorage.get("user")
+  user: JSON.parse(window.localStorage.getItem("user"))
 }
 
 messages.on("requestBugTracking", (_) => (state.requestBugTracking = true))

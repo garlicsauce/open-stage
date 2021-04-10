@@ -45,6 +45,7 @@ export class WebRTC extends Emitter {
 
     this.room = room
     this.peerSettings = peerSettings
+    this.user = user
 
     log("webrtc reaches out to", SIGNAL_SERVER_URL)
 
@@ -60,7 +61,7 @@ export class WebRTC extends Emitter {
         online: true,
       })
       this.emit("connect")
-      this.io.emit("join", { room, user })
+      this.io.emit("join", { room, user: this.user })
     })
 
     this.io.on("disconnect", () => {
@@ -82,7 +83,7 @@ export class WebRTC extends Emitter {
     })
 
     // Receive all other currently available peers
-    this.io.on("joined", ({ room, peers, user, vapidPublicKey }) => {
+    this.io.on("joined", ({ room, peers, users, vapidPublicKey }) => {
       const local = this.io.id
 
       state.vapidPublicKey = vapidPublicKey
@@ -92,7 +93,7 @@ export class WebRTC extends Emitter {
       // We will try to establish a separate connection to all of them
       // If the new participant (us) initiates the connections, the others do
       // not need to get updates about new peers
-      this.io.on("signal", ({ from, to, signal, initiator }) => {
+      this.io.on("signal", ({ from, to, signal, users, initiator }) => {
         // log('received signal', from, to === local, initiator)
         // If we are not already connected, do it now
         let peer = this.peerConnections[from]
@@ -100,6 +101,7 @@ export class WebRTC extends Emitter {
           peer = this.handlePeer({
             remote: from,
             local,
+            user: users[from],
             initiator: false,
             wrtc,
           })
@@ -113,6 +115,7 @@ export class WebRTC extends Emitter {
         this.handlePeer({
           remote,
           local,
+          user: users[remote],
           initiator: true,
           wrtc,
         })
@@ -145,13 +148,13 @@ export class WebRTC extends Emitter {
     return this.peerConnections[id] || null
   }
 
-  handlePeer({ remote, wrtc, local, initiator = false } = {}) {
+  handlePeer({ remote, user, wrtc, local, initiator = false } = {}) {
     let peer = new WebRTCPeer({
       local,
       remote,
-      user,
       initiator,
       wrtc,
+      user,
       room: this.room,
       ...this.peerSettings,
     })
@@ -166,8 +169,7 @@ export class WebRTC extends Emitter {
         from: local,
         to: remote,
         signal,
-        initiator,
-        user
+        initiator
       })
     })
 

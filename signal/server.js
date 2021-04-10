@@ -10,6 +10,9 @@ const {
   addSocketToRoom,
   removeSocketFromRoom,
   allSocketsForRoom,
+  getUsers,
+  addUser,
+  removeUser
 } = require('./rooms')
 const config = require('./config')
 
@@ -73,6 +76,7 @@ io.on('connection', function (socket) {
       log(`* ${msg}:`, data)
       brokenSocket(socket)
       removeSocketFromRoom(sid, currentRoom)
+      removeUser(sid)
     })
   }
 
@@ -88,6 +92,7 @@ io.on('connection', function (socket) {
   // The peer that joined is responsible for initiating WebRTC connections
   socket.on('join', ({ room, user }) => {
     let peers = allSocketsForRoom(room)
+
     const full = peers.length >= config.max
     if (full) {
       socket.emit('error', {
@@ -98,11 +103,13 @@ io.on('connection', function (socket) {
     } else {
       removeSocketFromRoom(sid, currentRoom)
       addSocketToRoom(sid, room)
+      addUser(sid, user)
+      let users = getUsers()
       currentRoom = room
       socket.emit('joined', {
         room,
         peers,
-        user
+        users
       })
     }
   })
@@ -116,8 +123,10 @@ io.on('connection', function (socket) {
     if (data.to) {
       const toSocket = socketByID(data.to)
       if (toSocket) {
+        let users = getUsers()
         toSocket.emit('signal', {
           ...data,
+          users
           // from: socket.id,
         })
       } else {
