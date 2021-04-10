@@ -320,6 +320,7 @@
 </template>
 
 <script>
+
 import { messages } from "../lib/emitter"
 import { createLinkForRoom, shareLink } from "../lib/share"
 import { setup } from "../state"
@@ -331,6 +332,10 @@ import { setAllowedBugTracking } from "../bugs"
 import { setBackgroundImage } from "../logic/background"
 
 const log = require("debug")("app:app-sidebar")
+
+messages.on('priceBounce', function() {
+  console.log('bansuj')
+});
 
 export default {
   name: "app-main",
@@ -375,6 +380,9 @@ export default {
   methods: {
     doShare() {
       shareLink(createLinkForRoom(this.state.room))
+    },
+    bidOffer() {
+      messages.emit("bidOffer", {roomId: state.room})
     },
     doVideo() {
       this.state.muteVideo = !this.state.muteVideo
