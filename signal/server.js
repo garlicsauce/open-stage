@@ -12,7 +12,11 @@ const {
   allSocketsForRoom,
   getUsers,
   addUser,
-  removeUser
+  removeUser,
+  addOffer,
+  getOffer,
+  getOffers,
+  removeOffer,
 } = require('./rooms')
 const config = require('./config')
 
@@ -105,11 +109,13 @@ io.on('connection', function (socket) {
       addSocketToRoom(sid, room)
       addUser(sid, user)
       let users = getUsers()
+      let offer = getOffer(room)
       currentRoom = room
       socket.emit('joined', {
         room,
         peers,
-        users
+        users,
+        offer
       })
     }
   })
@@ -128,6 +134,28 @@ io.on('connection', function (socket) {
     io.emit('userUpdate', fromUser)
     io.emit('userUpdate', toUser)
   })
+
+  socket.on('addOffer', ({roomId, title, type, description, photo, price, duration, author}) => {
+    let offer = {
+      roomId,
+      title,
+      type,
+      description,
+      photo,
+      price,
+      duration,
+      author
+    }
+
+    addOffer(roomId, offer)
+
+    socket.emit("newOffer", offer)
+
+    setTimeout(function() {
+      removeOffer(roomId)
+      socket.emit("endOffer", offer)
+    }, offer.duration * 1000)
+  });
 
   // Ask for a connection to another socket via ID
   socket.on('signal', data => {
@@ -158,6 +186,7 @@ const startDate = new Date()
 
 app.use('/status', (req, res) => {
   let users = getUsers()
+  let offers = getOffers()
 
   let status = {
     api: 1,
@@ -166,7 +195,8 @@ app.use('/status', (req, res) => {
       timeStarted: Math.round(startDate.getTime()),
       activeConnections: activeSockets().length,
       rooms,
-      users
+      users,
+      offers
     },
   }
   res.json(status)

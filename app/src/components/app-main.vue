@@ -44,7 +44,7 @@
 
         <div
           class="message-container -error"
-          v-if="!state.screenshots && state.requestBugTracking"
+          v-if="false"
         >
           <div class="message">
             An error occurred. Please help us fixing it by allowing to send the
@@ -55,7 +55,7 @@
           </div>
         </div>
 
-        <div class="message-container -error" v-else-if="state.error">
+        <div class="message-container -error" v-else-if="false">
           <div class="message">
             {{ state.error }}
             <u @click="doReload">Reload page</u>
@@ -426,6 +426,9 @@ export default {
   beforeDestroy() {
     document.removeEventListener("fullscreenchange", this.fullscreenHandler)
     this.conn?.cleanup()
+  },
+  addOffer(roomId, title, type, description, photo, price, duration, author) {
+    messages.emit('addOffer', {roomId, title, type, description, photo, price, duration, author})
   },
 }
 </script>

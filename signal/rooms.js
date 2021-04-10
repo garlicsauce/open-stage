@@ -2,6 +2,7 @@ const log = require('debug')('signal:rooms')
 
 let rooms = {}
 let users = {}
+let offers = {}
 
 function addProperty(obj, key, value, info = true) {
   if (key == null) return false
@@ -61,6 +62,28 @@ function removeUser(sid) {
   delete users[sid]
 }
 
+function getOffer(roomId) {
+  if (offers[roomId] == null) {
+    return {}
+  }
+
+  return offers[roomId]
+}
+
+function addOffer(roomId, offer) {
+  offers[roomId] = offer
+
+  return true
+}
+
+function getOffers() {
+  return offers
+}
+
+function removeOffer(roomId) {
+  delete offers[roomId]
+}
+
 module.exports = {
   rooms,
   addSocketToRoom,
@@ -69,5 +92,9 @@ module.exports = {
   getUser,
   addUser,
   getUsers,
-  removeUser
+  removeUser,
+  getOffer,
+  addOffer,
+  getOffers,
+  removeOffer
 }

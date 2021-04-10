@@ -83,11 +83,14 @@ export class WebRTC extends Emitter {
     })
 
     // Receive all other currently available peers
-    this.io.on("joined", ({ room, peers, users, vapidPublicKey }) => {
+    this.io.on("joined", ({ room, peers, users, offer, vapidPublicKey }) => {
       const local = this.io.id
 
       state.vapidPublicKey = vapidPublicKey
+      state.offer = offer
 
+      console.log(state)
+      
       log("me", local, room, "peers", peers)
 
       // We will try to establish a separate connection to all of them
@@ -130,8 +133,6 @@ export class WebRTC extends Emitter {
           setUser(user)
         }
 
-        console.log(this.peerConnections)
-
         for (const [id, peerConnected] of Object.entries(this.peerConnections)) {
           if (peerConnected.user.name == user.name) {
             this.peerConnections[id].user = user;
@@ -141,10 +142,25 @@ export class WebRTC extends Emitter {
         this.updateStatus()
       })
 
+      this.io.on("newOffer", (offer) => {
+        if (offer.roomId == this.room) {
+          state.offer = offer
+        }
+      })
+
+      this.io.on("endOffer", (offer) => {
+        if (offer.roomId == this.room) {
+          state.offer = {}
+        }
+      })
+
       messages.on("transferReputation", ({sid1, sid2, value}) => {        
         this.io.emit("transferReputation", { sid1, sid2, value })
       })
 
+      messages.on("addOffer", ({roomId, title, type, description, photo, price, duration, author}) => {
+        this.io.emit("addOffer", {roomId, title, type, description, photo, price, duration, author})
+      })
     })
   }
 
