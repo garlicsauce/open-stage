@@ -2,6 +2,9 @@
   <div class="logo" style="overflow-x: auto; overflow-y: auto">
     <table>
       <tr>
+        <th colspan="2">Financial rooms</th>
+      </tr>
+      <tr>
         <td>Investing</td>
         <td>
           <a @click.prevent="doEnterRoom($event, 'investing')"
@@ -11,19 +14,44 @@
         </td>
       </tr>
       <tr>
-        <td>Raiffeisen bank products</td>
+        <td>Stock</td>
         <td>
-          <a @click.prevent="doEnterRoom($event, 'bank-products')"
-             href="/room/bank-products"
+          <a @click.prevent="doEnterRoom($event, 'stock')"
+             href="/room/stock"
              class="button start-button"
              id="button">join</a>
         </td>
       </tr>
       <tr>
-        <td>Room 3</td>
+        <td>Retirement</td>
         <td>
-          <a @click.prevent="doEnterRoom($event, 'room3')"
-             href="/room/room3"
+          <a @click.prevent="doEnterRoom($event, 'retirement')"
+             href="/room/retirement"
+             class="button start-button"
+             id="button">join</a>
+        </td>
+      </tr>
+    </table>
+
+    <table>
+      <tr>
+        <th colspan="2">Luxembourg</th>
+      </tr>
+      <tr>
+        <td>Startups</td>
+        <td>
+          <a @click.prevent="doEnterRoom($event, 'startups')"
+             href="/room/startups"
+             class="button start-button"
+             id="button">join</a>
+        </td>
+      </tr>
+      </tr>
+      <tr>
+        <td>Local projects</td>
+        <td>
+          <a @click.prevent="doEnterRoom($event, 'local-projects')"
+             href="/room/local-projects"
              class="button start-button"
              id="button">join</a>
         </td>
