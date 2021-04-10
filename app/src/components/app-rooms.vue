@@ -56,7 +56,6 @@
   }
 
   .logo {
-    flex: auto;
     flex-direction: column;
     justify-content: center;
     display: inline-flex;
