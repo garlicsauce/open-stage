@@ -2,13 +2,13 @@
   <div class="-scroll">
     <div class="page1">
 
-      <div class="logo">
-        <a @click.prevent="doEnterRoom" id="link">
-          Open<span style="color: #112242">Stage</span>
-        </a>
-      </div>
-
       <template v-if="!authorised">
+        <div class="logo">
+          <a @click.prevent="doEnterRoom" id="link">
+            Open<span style="color: #112242">Stage</span>
+          </a>
+        </div>
+
         <div class="login-container">
           <div class="login-box">
 
@@ -39,7 +39,12 @@
       </template>
 
       <template v-else>
-        <button class="login-button" type="submit" v-on:click="logout($event)">Logout</button>
+        <div class="topnav">
+          <a @click.prevent="doEnterRoom" id="link" class="alogo">
+            Open<span style="color: #112242">Stage</span>
+          </a>
+          <a v-on:click="logout($event)" class="logoutnav">Logout</a>
+        </div>
         <app-rooms></app-rooms>
       </template>
 
@@ -70,7 +75,7 @@
     background-color: white;
     border-top: 1px solid #d8d8d8;
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
-    width: 45%;
+    width: 70%;
     height: 45%;
     margin: 0 auto;
     margin-top: 20px;
@@ -101,6 +106,41 @@
     border: 1px solid #cccccc;
     border-radius: 4px;
   }
+
+  .topnav {
+    background-color: #112242;
+    overflow: hidden;
+  }
+
+  /* Style the links inside the navigation bar */
+  .topnav a {
+    float: left;
+    color: #fff;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    border-bottom: 1px solid black;
+  }
+
+  /* Change the color of links on hover */
+  .topnav a:hover {
+    background-color: #cacaca;
+    color: black;
+  }
+
+  .topnav a.alogo {
+    background-color: #b4c72e;
+  }
+
+  .topnav a.alogo:hover {
+    background-color: #b4c72e;
+    color: white;
+  }
+
+  .topnav a.logoutnav {
+    float: right;
+  }
 </style>
 
 <script>
@@ -121,6 +161,7 @@
         e.preventDefault()
         if (this.username !== '' && this.password !== '') {
           localStorage.setItem('user', JSON.stringify({'name': this.username, 'password': this.password}))
+          this.state.user = this.username
           this.authorised = true
         }
       },
