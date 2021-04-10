@@ -164,7 +164,7 @@ io.on('connection', function (socket) {
     if (offer != null) {
       offer.price = offer.price + 5
       addOffer(roomId, offer)
-      socket.emit("updateOffer", offer)
+      io.emit("updateOffer", offer)
     }
   });
 

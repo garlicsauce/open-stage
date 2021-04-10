@@ -172,7 +172,7 @@
       },
       addOffer(event, roomId, title, type, description, photo, price, duration, author) {
         event.preventDefault()
-        let info = {roomId, title, type, description, photo, price, duration, author}
+        let info = {roomId, title, type, description, photo, price: parseInt(price), duration, author}
         console.log(info)
         messages.emit('addOffer', info)
       },

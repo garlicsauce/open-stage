@@ -67,7 +67,7 @@
                   <p>{{state.offer.description}}</p>
                 </div>
                 <div class="product-price">
-                  <span>{{state.offer.price}} RCN</span>
+                  <span id="rcnbidprice">{{state.offer.price}} RCN</span>
                   <a href="#" class="cart-btn" v-if="state.offer.type === 'sell'">Buy</a>
                   <a class="cart-btn" v-else-if="state.offer.type === 'auction'" v-on:click="bidOffer">Bid</a>
                 </div>
@@ -445,11 +445,28 @@
   import AppVideo from "./app-video"
   import {setAllowedBugTracking} from "../bugs"
   import {setBackgroundImage} from "../logic/background"
+  import mojs from '@mojs/core'
+
+  const burst = new mojs.Burst({
+    left: 0, top: 0,
+    radius:   { 0: 100 },
+    count:    5,
+    children: {
+      shape:        'circle',
+      radius:       20,
+      fill:         [ 'deeppink', 'cyan', 'yellow' ],
+      strokeWidth:  5,
+      duration:     2000
+    }
+  });
 
   const log = require("debug")("app:app-sidebar")
 
   messages.on('priceBounce', function() {
-    console.log('bansuj')
+    burst
+      .tune({ x: document.getElementById("rcnbidprice").offsetLeft, y: document.getElementById("rcnbidprice").offsetTop })
+      .setSpeed(3)
+      .replay()
   });
 
   export default {
