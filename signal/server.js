@@ -141,20 +141,21 @@ io.on('connection', function (socket) {
 
 const startDate = new Date()
 
-if (CONFIG.debug) {
-  app.use('/status', (req, res) => {
-    let status = {
-      api: 1,
-      success: true,
-      info: {
-        timeStarted: Math.round(startDate.getTime()),
-        activeConnections: activeSockets().length,
-        rooms,
-      },
-    }
-    res.json(status)
-  })
-}
+app.use('/status', (req, res) => {
+  let users = getUsers()
+
+  let status = {
+    api: 1,
+    success: true,
+    info: {
+      timeStarted: Math.round(startDate.getTime()),
+      activeConnections: activeSockets().length,
+      rooms,
+      users
+    },
+  }
+  res.json(status)
+})
 
 app.use('/', (req, res) => {
   res.send(`<!DOCTYPE html>
