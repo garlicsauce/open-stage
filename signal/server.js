@@ -174,13 +174,23 @@ io.on('connection', function (socket) {
 
   socket.on('askForPrivate', ({sid1, sid2}) => {
     let socket = socketByID(sid2)
-    let user = getUser(sid2)
+    let user = getUser(sid1)
 
     if (socket) {
       socket.emit("privateRequest", user)
     }
   });
 
+  socket.on('privateAccept', ({user}) => {
+    for (const [id, userEntry] of Object.entries(getUsers())) {
+      if (user.name == userEntry.name) {
+        let socket = socketByID(id)
+        if (socket) {
+          socket.emit("privateRedirect", user)
+        }
+      }
+    }
+  });
 
   socket.on('buyItem', ({roomId}) => {
     let offer = getOffer(roomId)

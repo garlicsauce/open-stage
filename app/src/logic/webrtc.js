@@ -169,6 +169,10 @@ export class WebRTC extends Emitter {
         messages.emit("privateRequest", user)
       })
 
+      this.io.on("privateRedirect", (user) => {
+        window.location.href = '/room/private-' + user.name.replace(/\s+/g, '-').toLowerCase();
+      })
+
       messages.on("transferReputation", ({sid1, sid2, value}) => {
         this.io.emit("transferReputation", { sid1, sid2, value })
       })
@@ -187,6 +191,10 @@ export class WebRTC extends Emitter {
 
       messages.on("buyItem", ({roomId}) => {
         this.io.emit("buyItem", {roomId})
+      })
+
+      messages.on("privateAccept", ({user}) => {
+        this.io.emit("privateAccept", {user})
       })
     })
   }

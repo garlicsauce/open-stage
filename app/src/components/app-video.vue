@@ -148,8 +148,13 @@ const burst = new mojs.Burst({
 });
 
 messages.on('privateRequest', function (user) {
-  console.log('request from')
-  console.log(user)
+  let r = confirm("You got the request for private chat from " + user.name + ". Would you like to chat with this user?");
+  if (r == true) {
+    messages.emit('privateAccept', {user})
+    setTimeout(function() { window.location.href = '/room/private-' + user.name.replace(/\s+/g, '-').toLowerCase() })
+  } else {
+    console.log('Private declined.')
+  }
 })
 
 
