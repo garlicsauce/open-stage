@@ -136,7 +136,7 @@ io.on('connection', function (socket) {
     io.emit('userUpdate', toUser)
   })
 
-  socket.on('addOffer', ({roomId, title, type, description, photo, price, duration, author}) => {
+  socket.on('addOffer', ({roomId, title, type, description, photo, price, duration, qty, availableAmount, sold, author}) => {
     let offer = {
       roomId,
       title,
@@ -145,6 +145,9 @@ io.on('connection', function (socket) {
       photo,
       price,
       duration,
+      qty,
+      availableAmount,
+      sold,
       author
     }
 
@@ -177,6 +180,18 @@ io.on('connection', function (socket) {
       socket.emit("privateRequest", user)
     }
   });
+
+
+  socket.on('buyItem', ({roomId}) => {
+    let offer = getOffer(roomId)
+
+    if (offer != null) {
+      offer.availableAmount = offer.availableAmount - 1
+      offer.sold = offer.sold + 1
+      addOffer(roomId, offer)
+      io.emit("updateOffer", offer)
+    }
+  })
 
   // Ask for a connection to another socket via ID
   socket.on('signal', data => {

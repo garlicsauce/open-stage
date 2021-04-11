@@ -140,9 +140,9 @@ export class WebRTC extends Emitter {
         for (const [id, peerConnected] of Object.entries(this.peerConnections)) {
           if (peerConnected.user.name == user.name) {
             this.peerConnections[id].user = user;
-          } 
+          }
         }
-        
+
         this.updateStatus()
       })
 
@@ -169,12 +169,12 @@ export class WebRTC extends Emitter {
         messages.emit("privateRequest", user)
       })
 
-      messages.on("transferReputation", ({sid1, sid2, value}) => {        
+      messages.on("transferReputation", ({sid1, sid2, value}) => {
         this.io.emit("transferReputation", { sid1, sid2, value })
       })
 
-      messages.on("addOffer", ({roomId, title, type, description, photo, price, duration, author}) => {
-        this.io.emit("addOffer", {roomId, title, type, description, photo, price, duration, author})
+      messages.on("addOffer", ({roomId, title, type, description, photo, price, duration, qty, availableAmount, sold, author}) => {
+        this.io.emit("addOffer", {roomId, title, type, description, photo, price, duration, qty, availableAmount, sold, author})
       })
 
       messages.on("bidOffer", ({roomId}) => {
@@ -183,6 +183,10 @@ export class WebRTC extends Emitter {
 
       messages.on("askForPrivate", ({sid1, sid2}) => {
         this.io.emit("askForPrivate", {sid1, sid2})
+      })
+
+      messages.on("buyItem", ({roomId}) => {
+        this.io.emit("buyItem", {roomId})
       })
     })
   }
