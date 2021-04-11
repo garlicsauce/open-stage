@@ -74,14 +74,11 @@
                 <div class="seller-info">
                   <span>Seller: </span><p>{{state.offer.author.name}}</p><br/>
                   <template v-if="state.offer.type === 'sell'">
-                    <span>Available: </span><p>{{state.offer.availableAmount}} / {{state.offer.qty}}</p>
-                    <div id="progress">
-                      <div class="shell">
-                        <div class="bar" :style="{ width: (state.offer.sold/state.offer.qty) + '%' }".>
-                          <span>{{ state.offer.sold/state.offer.qty }}%</span>
-                        </div>
-                      </div>
-                    </div>
+                    <span>Available: </span><p>{{state.offer.availableAmount}} / {{state.offer.qty}}</p><br/>
+                    <span>Time left: </span>
+                    <vue-countdown class="countdown" :time="1000 * 60 * state.offer.duration" v-slot="{hours, minutes, seconds}" style="display: inline">
+                      {{hours}}h {{minutes}}m {{seconds}}s
+                    </vue-countdown>
                   </template>
                 </div>
               </div>
@@ -444,33 +441,13 @@
     display: inline;
   }
 
-  #progress {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: sans-serif;
-  }
-
-  .shell {
-    height: 20px;
-    width: 250px;
-    border: 1px solid #aaa;
-    border-radius: 13px;
-    padding: 3px;
-  }
-
-  .bar {
-    background: linear-gradient(to right, #B993D6, #8CA6DB);
-    height: 20px;
-    width: 15px;
-    border-radius: 9px;
-    span {
-      float: right;
-      padding: 4px 5px;
-      color: #fff;
-      font-size: 0.7em
-    }
+  .seller-info vue-countdown {
+    font-size: 14px;
+    color: #112242;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline;
   }
 </style>
 
@@ -485,6 +462,7 @@
   import {setAllowedBugTracking} from "../bugs"
   import {setBackgroundImage} from "../logic/background"
   import mojs from '@mojs/core'
+  import VueCountdown from '@chenfengyuan/vue-countdown';
 
   const burst = new mojs.Burst({
     left: 0, top: 0,
@@ -519,6 +497,7 @@
       SeaModal,
       SeaButton,
       AppVideo,
+      VueCountdown,
     },
     data() {
       return {
