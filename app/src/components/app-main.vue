@@ -55,17 +55,17 @@
           </div>
         </div>
 
-        <div class="message-container error" style="top: 2rem;bottom: auto;" v-if="state.offer.title">
+        <div class="message-container error" v-if="state.offer.title">
           <div class="message">
             <div class="current-offer">
               <div class="offer-left-column">
                 <img class="active" :src="state.offer.photo"/>
-              </div>
-              <div class="offer-right-column">
                 <div class="product-description">
                   <h1>{{state.offer.title}}</h1>
                   <p>{{state.offer.description}}</p>
                 </div>
+              </div>
+              <div class="offer-right-column">
                 <div class="product-price">
                   <span id="rcnbidprice">{{state.offer.price}} RCN</span>
                   <a href="#" class="cart-btn" v-if="state.offer.type === 'sell'" v-on:click="buyItem">Buy</a>
@@ -350,6 +350,7 @@
   .offer-left-column {
     width: 60%;
     position: relative;
+    text-align: center;
   }
 
   .offer-right-column {
@@ -368,12 +369,13 @@
   }
 
   .offer-left-column img.active {
+    max-width: 100px;
+    max-height: 150px;
     opacity: 1;
   }
 
   /* Product Description */
   .product-description {
-    border-bottom: 1px solid #E1E8EE;
     margin-bottom: 20px;
   }
   .product-description span {
@@ -385,20 +387,20 @@
   }
   .product-description h1 {
     font-weight: 300;
-    font-size: 52px;
-    color: #43484D;
+    font-size: 30px;
+    color: #1e2021;
     letter-spacing: -2px;
   }
   .product-description p {
     font-size: 16px;
     font-weight: 300;
-    color: #86939E;
+    color: #161819;
     line-height: 24px;
   }
 
   /* Product Price */
   .product-price {
-    display: flex;
+    display: block;
     align-items: center;
   }
 
