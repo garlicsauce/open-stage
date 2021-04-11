@@ -157,7 +157,7 @@ io.on('connection', function (socket) {
     setTimeout(function() {
       removeOffer(roomId)
       io.emit("endOffer", offer)
-    }, offer.duration * 10000)
+    }, offer.duration * 1000 * 60)
   });
 
 
