@@ -18,19 +18,12 @@
   "display": "standalone",
   "background_color": "#b4c72e",
   "theme_color": "#b4c72e",
-  "author": "Dirk Holtwick",
+  "author": "2021 Team",
   "description": "Secure direct video chat",
-  "homepage_url": "https://brie.fi/",
-  "url": "https://brie.fi/",
+  "homepage_url": "https://hackathon.mikolaj.dev",
+  "url": "https://hackathon.mikolaj.dev",
   "lang": "EN",
-  "screenshots": [
-    {
-      "src": "https://brie.fi/sample.jpg",
-      "type": "image/png",
-      "size": "1478x1988",
-      "description": "Screenshot Openstage App"
-    }
-  ],
+  "screenshots": [ ],
   "features": [
     "Direct secure group video chat",
     "Verify integrity",

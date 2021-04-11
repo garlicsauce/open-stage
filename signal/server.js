@@ -17,6 +17,7 @@ const {
   getOffer,
   getOffers,
   removeOffer,
+  getUser,
 } = require('./rooms')
 const config = require('./config')
 
@@ -165,6 +166,15 @@ io.on('connection', function (socket) {
       offer.price = offer.price + 5
       addOffer(roomId, offer)
       io.emit("updateOffer", offer)
+    }
+  });
+
+  socket.on('askForPrivate', ({sid1, sid2}) => {
+    let socket = socketByID(sid2)
+    let user = getUser(sid2)
+
+    if (socket) {
+      socket.emit("privateRequest", user)
     }
   });
 

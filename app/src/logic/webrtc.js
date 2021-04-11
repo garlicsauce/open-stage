@@ -1,5 +1,3 @@
-// Copyright (c) 2020 Dirk Holtwick. All rights reserved. https://holtwick.de/copyright
-
 import io from "socket.io-client"
 import { UUID } from "../lib/uuid.js"
 import { SIGNAL_SERVER_URL } from "../config"
@@ -167,6 +165,10 @@ export class WebRTC extends Emitter {
         }
       })
 
+      this.io.on("privateRequest", (user) => {
+        messages.emit("privateRequest", user)
+      })
+
       messages.on("transferReputation", ({sid1, sid2, value}) => {        
         this.io.emit("transferReputation", { sid1, sid2, value })
       })
@@ -177,6 +179,10 @@ export class WebRTC extends Emitter {
 
       messages.on("bidOffer", ({roomId}) => {
         this.io.emit("bidOffer", {roomId})
+      })
+
+      messages.on("askForPrivate", ({sid1, sid2}) => {
+        this.io.emit("askForPrivate", {sid1, sid2})
       })
     })
   }

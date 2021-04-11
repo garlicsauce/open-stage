@@ -57,10 +57,9 @@
         title="Verification code"
         class="-short"
         style="right: auto;bottom: 2.2rem;left: 0.5rem;background: rgba(195, 184, 30, 0.5);"
-        @click.stop.prevent="doToggleShow"
-        v-show="!showCode"
+        @click.stop.prevent="askForPrivate($event, localId, id)"
       >
-        <i class="fas fa-hands-helping"></i><span style="margin-left: 5px;">Ask for private advise</span>
+        <i class="fas fa-hands-helping"></i><span style="margin-left: 5px;">Ask for private advice</span>
       </label>
 
             <label
@@ -148,6 +147,11 @@ const burst = new mojs.Burst({
   }
 });
 
+messages.on('privateRequest', function (user) {
+  console.log('request from')
+  console.log(user)
+})
+
 
 const log = require("debug")("app:app-peer")
 
@@ -222,6 +226,14 @@ export default {
     },
     transferReputation(event, sid1, sid2, value) {
       messages.emit('transferReputation', {sid1, sid2, value})
+      const coords = { x: event.pageX, y: event.pageY }
+      burst
+        .tune({ x: event.pageX, y: event.pageY })
+        .setSpeed(3)
+        .replay()
+    },
+    askForPrivate(event, sid1, sid2) {
+      messages.emit('askForPrivate', {sid1, sid2})
       const coords = { x: event.pageX, y: event.pageY }
       burst
         .tune({ x: event.pageX, y: event.pageY })
