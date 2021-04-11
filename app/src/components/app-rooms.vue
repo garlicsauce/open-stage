@@ -257,6 +257,7 @@
           this.numberOfPeople.set(key, Object.keys(roomStatus.info.rooms[key]).length)
 
           let numberOfPpl = this.numberOfPeople.get(key)
+          console.log(key)
           let parent = document.getElementById(key + '-name')
           parent.querySelectorAll('div').forEach(n => n.remove())
           parent.querySelectorAll('p').forEach(n => n.remove())

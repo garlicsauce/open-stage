@@ -75,13 +75,6 @@
                   <span>Seller: </span><p>{{state.offer.author.name}}</p><br/>
                   <template v-if="state.offer.type === 'sell'">
                     <span>Available: </span><p>{{state.offer.availableAmount}} / {{state.offer.qty}}</p>
-                    <div id="progress">
-                      <div class="shell">
-                        <div class="bar" :style="{ width: (state.offer.sold/state.offer.qty) + '%' }".>
-                          <span>{{ state.offer.sold/state.offer.qty }}%</span>
-                        </div>
-                      </div>
-                    </div>
                   </template>
                 </div>
               </div>
