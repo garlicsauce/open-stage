@@ -20,38 +20,38 @@
       class="-fit vstack"
       :data-mode="state.maximized ? 'maximized' : 'default'"
     >
-      <div class="message-container error" style="top: 1rem; bottom:auto;" v-if="state.offer.title">
-        <div class="message">
-          <div class="current-offer">
-            <div class="offer-left-column">
-              <img class="active" :src="state.offer.photo"/>
-              <div class="product-description">
-                <h1>{{state.offer.title}}</h1>
-                <p>{{state.offer.description}}</p>
+      <div class="-fit stack videos -relative">
+        <div class="message-container error" style="top: 1rem; bottom:auto;" v-if="state.offer.title">
+          <div class="message">
+            <div class="current-offer">
+              <div class="offer-left-column">
+                <img class="active" :src="state.offer.photo"/>
+                <div class="product-description">
+                  <h1>{{state.offer.title}}</h1>
+                  <p>{{state.offer.description}}</p>
+                </div>
               </div>
-            </div>
-            <div class="offer-right-column">
-              <div class="product-price">
-                <span id="rcnbidprice">{{state.offer.price}} RCN</span>
-                <a href="#" class="cart-btn" v-if="state.offer.type === 'sell'" v-on:click="buyItem">Buy</a>
-                <a class="cart-btn" v-else-if="state.offer.type === 'auction'" v-on:click="bidOffer">Bid</a>
-              </div>
-              <div class="seller-info">
-                <span>Seller: </span><p>{{state.offer.author.name}}</p><br/>
-                <template v-if="state.offer.type === 'sell'">
-                  <span>Available: </span><p>{{state.offer.availableAmount}} / {{state.offer.qty}}</p><br/>
-                  <span>Time left: </span>
-                  <vue-countdown class="countdown" :time="1000 * 60 * state.offer.duration" v-slot="{hours, minutes, seconds}" style="display: inline">
-                    {{hours}}h {{minutes}}m {{seconds}}s
-                  </vue-countdown>
-                </template>
+              <div class="offer-right-column">
+                <div class="product-price">
+                  <span id="rcnbidprice">{{state.offer.price}} RCN</span>
+                  <a href="#" class="cart-btn" v-if="state.offer.type === 'sell'" v-on:click="buyItem">Buy</a>
+                  <a class="cart-btn" v-else-if="state.offer.type === 'auction'" v-on:click="bidOffer">Bid</a>
+                </div>
+                <div class="seller-info">
+                  <span>Seller: </span><p>{{state.offer.author.name}}</p><br/>
+                  <template v-if="state.offer.type === 'sell'">
+                    <span>Available: </span><p>{{state.offer.availableAmount}} / {{state.offer.qty}}</p><br/>
+                    <span>Time left: </span>
+                    <vue-countdown class="countdown" :time="1000 * 60 * state.offer.duration" v-slot="{hours, minutes, seconds}" style="display: inline">
+                      {{hours}}h {{minutes}}m {{seconds}}s
+                    </vue-countdown>
+                  </template>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="-fit stack videos -relative">
         <app-video
           v-if="videoAllowed && state.stream"
           :stream="state.stream"
