@@ -31,6 +31,11 @@
         </div>
       </label>
 
+      <template v-if="!toggleValue">
+        <label for="itemQty">Quantity</label>
+        <input class="input" type="number" id="itemQty" v-model="item.qty">
+      </template>
+
       <sea-button class="submit" v-on:click="createOffer">Create offer</sea-button>
     </form>
   </div>
@@ -159,7 +164,8 @@
           price: null,
           type: null,
           duration: null,
-          photoB64: null
+          photoB64: null,
+          qty: null,
         },
         toggleState: false,
         url: "",
@@ -168,12 +174,11 @@
     methods: {
       createOffer(event) {
         let type = this.toggleValue ? 'auction' : 'sell'
-        this.addOffer(event, this.state.room, this.item.name, type, this.item.description, this.item.photoB64, this.item.price, this.item.duration, this.state.user)
+        this.addOffer(event, this.state.room, this.item.name, type, this.item.description, this.item.photoB64, this.item.price, this.item.duration, this.item.qty, this.state.user)
       },
-      addOffer(event, roomId, title, type, description, photo, price, duration, author) {
+      addOffer(event, roomId, title, type, description, photo, price, duration, qty, author) {
         event.preventDefault()
-        let info = {roomId, title, type, description, photo, price: parseInt(price), duration, author}
-        console.log(info)
+        let info = {roomId, title, type, description, photo, price: parseInt(price), duration, qty: parseInt(qty), availableAmount: parseInt(qty), sold: 0, author}
         messages.emit('addOffer', info)
       },
       uploadPhoto(event) {

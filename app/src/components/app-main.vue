@@ -68,11 +68,21 @@
                 </div>
                 <div class="product-price">
                   <span id="rcnbidprice">{{state.offer.price}} RCN</span>
-                  <a href="#" class="cart-btn" v-if="state.offer.type === 'sell'">Buy</a>
+                  <a href="#" class="cart-btn" v-if="state.offer.type === 'sell'" v-on:click="buyItem">Buy</a>
                   <a class="cart-btn" v-else-if="state.offer.type === 'auction'" v-on:click="bidOffer">Bid</a>
                 </div>
                 <div class="seller-info">
-                  <span>Seller: </span><p>{{state.offer.author.name}}</p>
+                  <span>Seller: </span><p>{{state.offer.author.name}}</p><br/>
+                  <template v-if="state.offer.type === 'sell'">
+                    <span>Available: </span><p>{{state.offer.availableAmount}} / {{state.offer.qty}}</p>
+                    <div id="progress">
+                      <div class="shell">
+                        <div class="bar" :style="{ width: (state.offer.sold/state.offer.qty) + '%' }".>
+                          <span>{{ state.offer.sold/state.offer.qty }}%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
                 </div>
               </div>
             </div>
@@ -433,6 +443,35 @@
     text-decoration: none;
     display: inline;
   }
+
+  #progress {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+  }
+
+  .shell {
+    height: 20px;
+    width: 250px;
+    border: 1px solid #aaa;
+    border-radius: 13px;
+    padding: 3px;
+  }
+
+  .bar {
+    background: linear-gradient(to right, #B993D6, #8CA6DB);
+    height: 20px;
+    width: 15px;
+    border-radius: 9px;
+    span {
+      float: right;
+      padding: 4px 5px;
+      color: #fff;
+      font-size: 0.7em
+    }
+  }
 </style>
 
 <script>
@@ -515,6 +554,9 @@
       },
       bidOffer() {
         messages.emit("bidOffer", {roomId: this.state.room})
+      },
+      buyItem() {
+        messages.emit("buyItem", {roomId: this.state.room})
       },
       doVideo() {
         this.state.muteVideo = !this.state.muteVideo
