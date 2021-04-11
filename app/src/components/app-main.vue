@@ -46,6 +46,12 @@
                       {{hours}}h {{minutes}}m {{seconds}}s
                     </vue-countdown>
                   </template>
+                  <template v-else-if="state.offer.type === 'auction'">
+                    <span>Time left: </span>
+                    <vue-countdown class="countdown" :time="1000 * 60 * state.offer.duration" v-slot="{hours, minutes, seconds}" style="display: inline">
+                      {{hours}}h {{minutes}}m {{seconds}}s
+                    </vue-countdown>
+                  </template>
                 </div>
               </div>
             </div>
@@ -241,8 +247,9 @@
 
         <sea-link
           @action="doTogglePanel('trade')"
-          :class="{ '-active': mode === 'trade' }"
+          :class="{ '-active': mode === 'trade' && !state.offer.title}"
           class="tool"
+          @close="mode = ''"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
